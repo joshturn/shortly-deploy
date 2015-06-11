@@ -11,9 +11,9 @@ var Link = require('../app/models/link');
 // NOTE: these tests are designed for mongo!
 /////////////////////////////////////////////////////
 
-describe('', function() {
+xdescribe('', function() {
 
-  xbeforeEach(function(done) {
+  beforeEach(function(done) {
     // Log out currently signed in user
     request(app)
       .get('/logout')
