@@ -44,7 +44,6 @@ module.exports = function(grunt) {
         'app/*.js'
       ],
       options: {
-        force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
@@ -80,8 +79,9 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push azure master'
+        }
       }
-    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
-      // add your production server task here
+      ['shell: prodServer'];
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -131,6 +131,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your deploy tasks here
+    'build',
+    'test',
+    'upload'
   ]);
 
 
