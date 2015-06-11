@@ -20,12 +20,28 @@ module.exports = function(grunt) {
       }
     },
 
-    uglify: {
+    concat: {
+      dist: {
+        src: ['public/**/*.js'],
+        dest: 'temp/squished.js'
+      }
     },
+
+    uglify: {
+      my_target: {
+        files: {
+          'public/dist/build.js': ['temp/squished.js']
+        }
+      }
+    },
+
 
     jshint: {
       files: [
-        // Add filespec list here
+        'server*.js',
+        'public/**/*.js',
+        'app/**/*.js',
+        'app/*.js'
       ],
       options: {
         force: 'true',
@@ -38,6 +54,11 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      target: {
+        files: {
+          'public/dist/minified.css': ['public/style.css']
+        }
+      }
     },
 
     watch: {
@@ -90,10 +111,14 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
+    'jshint',
     'mochaTest'
   ]);
 
   grunt.registerTask('build', [
+    'concat',
+    'uglify',
+    'cssmin'
   ]);
 
   grunt.registerTask('upload', function(n) {
