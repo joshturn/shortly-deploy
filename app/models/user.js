@@ -3,19 +3,21 @@ var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 
-mongoose.model('user', db.userSchema);
+var userSchema = mongoose.Schema({
+  username: String,
+  password: String
+});
 
-exports.createNewUser = function(params){
-  db.userSchema.pre('save', function(next){
-    var newUser = this;
+var User = mongoose.model('User', userSchema);
 
-    hashPassword(newUser).then(next);
+userSchema.pre('save', function(next){
+  var user = this;
 
-  });
-  return new user(params);
-};
+  hashPassword(user).then(next);
+});
 
-exports.comparePassword = function(user, attemptedPassword, callback){
+User.prototype.comparePassword = function(attemptedPassword, callback){
+  var user = this;
   bcrypt.compare(attemptedPassword, user.password, function(err, isMatch) {
       callback(isMatch);
     });
@@ -28,3 +30,5 @@ var hashPassword = function(user){
       user.password = hash;
     });
 }
+
+module.exports = User;

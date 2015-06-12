@@ -21,16 +21,22 @@ module.exports = function(grunt) {
     },
 
     concat: {
+      options: {
+        separator: ';'
+      },
       dist: {
-        src: ['public/**/*.js'],
-        dest: 'temp/squished.js'
+        src: ['public/client/**/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
       }
     },
 
     uglify: {
-      my_target: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+      },
+      dist: {
         files: {
-          'public/dist/build.js': ['temp/squished.js']
+          'public/dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
@@ -53,9 +59,12 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
-      target: {
+      options: {
+        keepSpecialComments: 0
+      },
+      dist: {
         files: {
-          'public/dist/minified.css': ['public/style.css']
+          'public/dist/style.min.css': 'public/style.css'
         }
       }
     },
@@ -131,7 +140,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your deploy tasks here
-    'build',
+    // 'build',
     'test',
     'upload'
   ]);

@@ -2,14 +2,23 @@ var db = require('../config');
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 
+var urlSchema = mongoose.Schema({
+  url: String,
+  base_url: String,
+  code: String,
+  title: String,
+  visits: Number
+});
 
-exports.Link = mongoose.model('url', db.urlSchema);
-
-exports.createNewLink = function(params) {
-  params.visits = 0;
+var Link = mongoose.model('Link', urlSchema);
+// exports.Link = mongoose.model('url', db.urlSchema);
+urlSchema.pre('save', function(next) {
   var shasum = crypto.createHash('sha1');
-  shasum.update(params.url);
-  params.code = shasum.digest('hex').slice(0, 5);
-  return new exports.Link(params);
-};
+  shasum.update(this.url);
+  this.code = shasum.digest('hex').slice(0, 5);
+  next();
+});
+
+
+module.exports = Link;
 
