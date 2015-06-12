@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/shortly')
 
+var dbConnect = process.env.CUSTOMCONNSTR_MONGOLAB_URI || 'mongodb://localhost/shortlydb';
+
+mongoose.connect(dbConnect);
 var mdb = mongoose.connection;
 mdb.on('error', function(){
   console.log('connection error');
